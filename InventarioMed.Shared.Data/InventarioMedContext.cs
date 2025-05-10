@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using InventarioMed.Shared.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,5 +17,8 @@ namespace InventarioMed.Shared.Data
         {
             optionsBuilder.UseSqlServer(connectionString);
         }
+
+        public DbSet<Equipment> Equipment { get; set; }
+        public DbSet<Category> Category { get; set; }
     }
 }

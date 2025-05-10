@@ -21,7 +21,7 @@ namespace InventarioMed.Shared.Model
 
         public override string ToString()
         {
-            return $@"Equipamento: {Name} {Id}";
+            return $@"{Id}- Nome: {Name}";
         }
         public void AddCategory(Category c)
         {
