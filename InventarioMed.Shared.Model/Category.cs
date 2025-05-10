@@ -11,6 +11,9 @@ namespace InventarioMed.Shared.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public int Id { get; set; }
+
+        public ICollection<Equipment> Equipment { get; set; }
+        //public Equipment? equipment { get; set; }
         public Category(string name)
         {
             Name = name;

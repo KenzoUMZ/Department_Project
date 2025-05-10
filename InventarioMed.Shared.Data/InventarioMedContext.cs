@@ -20,5 +20,7 @@ namespace InventarioMed.Shared.Data
 
         public DbSet<Equipment> Equipment { get; set; }
         public DbSet<Category> Category { get; set; }
+
+
     }
 }

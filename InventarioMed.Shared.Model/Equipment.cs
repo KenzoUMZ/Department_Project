@@ -17,7 +17,7 @@ namespace InventarioMed.Shared.Model
         public string Manufacturer { get; set; }
         public int Id { get; set; }
 
-        private List<Category> Categories = new();
+        public ICollection<Category> Categories { get; set; } = new List<Category>();
 
         public override string ToString()
         {
