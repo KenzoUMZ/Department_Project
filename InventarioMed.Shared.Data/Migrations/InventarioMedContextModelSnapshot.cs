@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InventarioMed.Shared.Data.Migrations
 {
-    [DbContext(typeof(InventarioMedContext))]
+    [DbContext(typeof(DepartmentContext))]
     partial class InventarioMedContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

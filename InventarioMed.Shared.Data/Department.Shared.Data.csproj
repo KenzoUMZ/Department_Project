@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -22,9 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\source\repos\Database1\Database1.sqlproj" />
-    <ProjectReference Include="..\InventarioMed.Shared.Data\InventarioMed.Shared.Data.csproj" />
-    <ProjectReference Include="..\InventarioMed.Shared.Model\InventarioMed.Shared.Model.csproj" />
+    <ProjectReference Include="..\InventarioMed.Shared.Model\Department.Shared.Model.csproj" />
   </ItemGroup>
 
 </Project>

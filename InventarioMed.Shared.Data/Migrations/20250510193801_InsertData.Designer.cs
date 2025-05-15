@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InventarioMed.Shared.Data.Migrations
 {
-    [DbContext(typeof(InventarioMedContext))]
+    [DbContext(typeof(DepartmentContext))]
     [Migration("20250510193801_InsertData")]
     partial class InsertData
     {

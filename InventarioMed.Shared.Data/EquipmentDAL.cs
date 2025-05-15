@@ -11,11 +11,11 @@ namespace InventarioMed.Shared.Data
 {
     public class EquipmentDAL
     {
-        private readonly InventarioMedContext context;
+        private readonly DepartmentContext context;
 
         public EquipmentDAL()
         {
-            context = new InventarioMedContext();
+            context = new DepartmentContext();
         }
 
         public void Create(Equipment eqp)

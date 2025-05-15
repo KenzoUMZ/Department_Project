@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Med_Projeto", "Med_Projeto\Med_Projeto.csproj", "{3719C220-430E-4072-A0DD-BD45D2CA7ACA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DepartmentProject", "Med_Projeto\DepartmentProject.csproj", "{3719C220-430E-4072-A0DD-BD45D2CA7ACA}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database1", "..\..\..\..\source\repos\Database1\Database1.sqlproj", "{F65033D3-A8D1-47DC-89C7-4C709DEFD9F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventarioMed.Shared.Model", "InventarioMed.Shared.Model\InventarioMed.Shared.Model.csproj", "{8355E328-2551-4F41-9EAF-1D6AD354EE22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Department.Shared.Model", "InventarioMed.Shared.Model\Department.Shared.Model.csproj", "{8355E328-2551-4F41-9EAF-1D6AD354EE22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventarioMed.Shared.Data", "InventarioMed.Shared.Data\InventarioMed.Shared.Data.csproj", "{CE7D3C73-7E8B-4248-9AFC-FFCB5370BD7F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Department.Shared.Data", "InventarioMed.Shared.Data\Department.Shared.Data.csproj", "{CE7D3C73-7E8B-4248-9AFC-FFCB5370BD7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

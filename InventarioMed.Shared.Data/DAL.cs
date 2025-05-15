@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventarioMed.Shared.Data
+namespace Department.Shared.Data
 {
     public class DAL<T> where T : class
     {
-        private readonly InventarioMedContext context;
+        private readonly DepartmentContext context;
         public DAL()
         {
-            context = new InventarioMedContext();
+            context = new DepartmentContext();
         }
 
         public void Create(T entity) => context.Set<T>().Add(entity);
