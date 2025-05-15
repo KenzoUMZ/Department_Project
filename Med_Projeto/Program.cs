@@ -124,7 +124,8 @@ internal class Program
                 string name = Console.ReadLine();
                 Console.WriteLine($"Enter the employee position:");
                 string position = Console.ReadLine();
-                Employee emp = new(name, position);
+                DepartmentEntity department = DepartmentList[departmentName];
+                Employee emp = new(name, position, 0, department);
                 DepartmentEntity d = DepartmentList[departmentName];
                 d.AddEmployee(emp);
                 Console.WriteLine($"Employee {name} added to {departmentName} successfully!");
