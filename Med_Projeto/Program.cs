@@ -1,6 +1,5 @@
 ﻿using Department.Shared.Data;
 using Department.Shared.Model;
-using InventarioMed.Shared.Data;
 
 internal class Program
 {

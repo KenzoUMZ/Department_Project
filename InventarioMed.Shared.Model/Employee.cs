@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Department.Shared.Model
 {
@@ -10,11 +6,17 @@ namespace Department.Shared.Model
     {
         public string Name { get; set; }
         public string Position { get; set; }
+        // 🔹 Chave composta (EmployeeId + ProjectId)
         public int EmployeeId { get; set; }
+        public int ProjectId { get; set; }
 
-        // Updated: Establishing a proper relationship with Department (1:N)
-        public DepartmentEntity Department { get; set; } // Single department per employee
+        // Propriedade de navegação para o Departamento
+        public DepartmentEntity Department { get; set; }
 
+        // 🔹 Construtor sem parâmetros para o EF Core
+        public Employee() { }
+
+        // 🔹 Construtor completo para uso manual (opcional)
         public Employee(string name, string position, int employeeId, DepartmentEntity department)
         {
             Name = name;
