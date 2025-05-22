@@ -11,22 +11,38 @@ namespace Department.Shared.Data
 {
     public class DepartmentContext : DbContext
     {
+        public DbSet<DepartmentEntity> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Project> Projects { get; set; }
+
+        public DbSet<EmployeeProject> EmployeeProjects { get; set; }
+
         private const string ConnectionString = "Server=tcp:departmentserver.database.windows.net,1433;Initial Catalog=Department_DB_V0;Persist Security Info=False;User ID=abacaxi_adm;Password=h@ytaee5Np3AF#5;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConnectionString);
+            optionsBuilder.UseSqlServer(ConnectionString).UseLazyLoadingProxies();
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Composite primary key for EmployeeProject
+            // Definir chave composta
             modelBuilder.Entity<EmployeeProject>()
                 .HasKey(ep => new { ep.EmployeeId, ep.ProjectId });
 
-            // ... any other configuration ...
+            // Chave estrangeira para Employee
+            modelBuilder.Entity<EmployeeProject>()
+                .HasOne(ep => ep.Employee)
+                .WithMany()  // Se Employee não tem um ICollection<EmployeeProject>
+                .HasForeignKey(ep => ep.EmployeeId);
+
+            // Chave estrangeira para Project
+            modelBuilder.Entity<EmployeeProject>()
+                .HasOne(ep => ep.Project)
+                .WithMany(p => p.EmployeeProjects) // Project tem ICollection<EmployeeProject>
+                .HasForeignKey(ep => ep.ProjectId);
+
         }
-        public DbSet<DepartmentEntity> Departments { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Project> Projects { get; set; }
+
     }
 }

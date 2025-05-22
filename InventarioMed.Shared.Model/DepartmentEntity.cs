@@ -17,7 +17,7 @@ namespace Department.Shared.Model
         public String Location { get; set; }
         public int Id { get; set; }
 
-        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
+        public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
         public override String ToString()
         {

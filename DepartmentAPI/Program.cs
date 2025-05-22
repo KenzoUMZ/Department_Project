@@ -8,7 +8,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // 🔹 Rota Padrão
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/hello", () => "Hello World!");
 
 // 🔹 Mapeamento dos Endpoints
 app.MapDepartmentEndpoints();

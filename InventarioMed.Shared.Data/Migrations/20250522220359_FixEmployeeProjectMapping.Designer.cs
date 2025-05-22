@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Department.Shared.Data.Migrations
 {
     [DbContext(typeof(DepartmentContext))]
-    [Migration("20250517120118_AddEmployeeProjectCompositeKey")]
-    partial class AddEmployeeProjectCompositeKey
+    [Migration("20250522220359_FixEmployeeProjectMapping")]
+    partial class FixEmployeeProjectMapping
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,9 @@ namespace Department.Shared.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -87,7 +90,7 @@ namespace Department.Shared.Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("EmployeeProject");
+                    b.ToTable("EmployeeProjects");
                 });
 
             modelBuilder.Entity("Department.Shared.Model.Project", b =>
@@ -117,10 +120,25 @@ namespace Department.Shared.Data.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("EmployeeProject", b =>
+                {
+                    b.Property<int>("EmployeesEmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EmployeesEmployeeId", "ProjectsId");
+
+                    b.HasIndex("ProjectsId");
+
+                    b.ToTable("EmployeeProject");
+                });
+
             modelBuilder.Entity("Department.Shared.Model.Employee", b =>
                 {
                     b.HasOne("Department.Shared.Model.DepartmentEntity", "Department")
-                        .WithMany("Employees")
+                        .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -147,9 +165,19 @@ namespace Department.Shared.Data.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("Department.Shared.Model.DepartmentEntity", b =>
+            modelBuilder.Entity("EmployeeProject", b =>
                 {
-                    b.Navigation("Employees");
+                    b.HasOne("Department.Shared.Model.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeesEmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Department.Shared.Model.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Department.Shared.Model.Project", b =>

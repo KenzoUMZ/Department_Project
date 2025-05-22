@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Department.Shared.Model
 {
@@ -9,13 +10,14 @@ namespace Department.Shared.Model
         // 🔹 Chave composta (EmployeeId + ProjectId)
         public int EmployeeId { get; set; }
         public int ProjectId { get; set; }
-
+        public int DepartmentId { get; set; }
+        public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
         // Propriedade de navegação para o Departamento
-        public DepartmentEntity Department { get; set; }
+        [JsonIgnore]
+        public virtual DepartmentEntity Department { get; set; }
 
         // 🔹 Construtor sem parâmetros para o EF Core
         public Employee() { }
-
         // 🔹 Construtor completo para uso manual (opcional)
         public Employee(string name, string position, int employeeId, DepartmentEntity department)
         {

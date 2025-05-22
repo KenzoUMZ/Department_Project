@@ -16,8 +16,8 @@ namespace Department.Shared.Model
         public DateTime EndDate { get; set; }
 
         // Updated: Establishing a proper many-to-many relationship with Employee
-        public ICollection<EmployeeProject> EmployeeProjects { get; set; } = new List<EmployeeProject>();
-
+        public virtual ICollection<EmployeeProject> EmployeeProjects { get; set; } = new List<EmployeeProject>();
+        public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
         public Project(string title, string description, DateTime startDate, DateTime endDate)
         {
             Title = title;

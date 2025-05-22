@@ -6,11 +6,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Department.Shared.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddEmployeeProjectCompositeKey : Migration
+    public partial class FixEmployeeProjectMapping : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Create tables (existing code)
             migrationBuilder.CreateTable(
                 name: "Departments",
                 columns: table => new
@@ -67,20 +68,44 @@ namespace Department.Shared.Data.Migrations
                 name: "EmployeeProject",
                 columns: table => new
                 {
+                    EmployeesEmployeeId = table.Column<int>(type: "int", nullable: false),
+                    ProjectsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeProject", x => new { x.EmployeesEmployeeId, x.ProjectsId });
+                    table.ForeignKey(
+                        name: "FK_EmployeeProject_Employees_EmployeesEmployeeId",
+                        column: x => x.EmployeesEmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmployeeProject_Projects_ProjectsId",
+                        column: x => x.ProjectsId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmployeeProjects",
+                columns: table => new
+                {
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeProject", x => new { x.EmployeeId, x.ProjectId });
+                    table.PrimaryKey("PK_EmployeeProjects", x => new { x.EmployeeId, x.ProjectId });
                     table.ForeignKey(
-                        name: "FK_EmployeeProject_Employees_EmployeeId",
+                        name: "FK_EmployeeProjects_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "EmployeeId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EmployeeProject_Projects_ProjectId",
+                        name: "FK_EmployeeProjects_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
@@ -88,8 +113,13 @@ namespace Department.Shared.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmployeeProject_ProjectId",
+                name: "IX_EmployeeProject_ProjectsId",
                 table: "EmployeeProject",
+                column: "ProjectsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeProjects_ProjectId",
+                table: "EmployeeProjects",
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
@@ -97,54 +127,53 @@ namespace Department.Shared.Data.Migrations
                 table: "Employees",
                 column: "DepartmentId");
 
-            // --- Seed Data ---
-
-            // Departments
+            // Insert seed data
             migrationBuilder.InsertData(
                 table: "Departments",
                 columns: new[] { "Id", "Name", "Location" },
                 values: new object[,]
                 {
-                    { 1, "HR", "Building A" },
-                    { 2, "IT", "Building B" }
+            { 1, "HR", "Building A" },
+            { 2, "IT", "Building B" }
                 });
 
-            // Projects
             migrationBuilder.InsertData(
                 table: "Projects",
                 columns: new[] { "Id", "Title", "Description", "StartDate", "EndDate" },
                 values: new object[,]
                 {
-                    { 1, "Migration", "Database migration project", new DateTime(2025, 5, 1), new DateTime(2025, 6, 1) },
-                    { 2, "API Development", "Developing RESTful APIs", new DateTime(2025, 5, 10), new DateTime(2025, 7, 1) }
+            { 1, "Migration", "Data migration project", new DateTime(2025, 5, 1), new DateTime(2025, 6, 1) },
+            { 2, "Upgrade", "System upgrade project", new DateTime(2025, 6, 2), new DateTime(2025, 7, 1) }
                 });
 
-            // Employees
             migrationBuilder.InsertData(
                 table: "Employees",
                 columns: new[] { "EmployeeId", "Name", "Position", "ProjectId", "DepartmentId" },
                 values: new object[,]
                 {
-                    { 1, "Alice", "Manager", 1, 1 },
-                    { 2, "Bob", "Developer", 2, 2 }
+            { 1, "Alice", "Manager", 1, 1 },
+            { 2, "Bob", "Developer", 2, 2 }
                 });
 
-            // EmployeeProject (many-to-many)
             migrationBuilder.InsertData(
-                table: "EmployeeProject",
+                table: "EmployeeProjects",
                 columns: new[] { "EmployeeId", "ProjectId" },
                 values: new object[,]
                 {
-                    { 1, 1 },
-                    { 2, 2 }
+            { 1, 1 },
+            { 2, 2 }
                 });
         }
+
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "EmployeeProject");
+
+            migrationBuilder.DropTable(
+                name: "EmployeeProjects");
 
             migrationBuilder.DropTable(
                 name: "Employees");
