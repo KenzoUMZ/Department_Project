@@ -8,7 +8,7 @@ namespace DepartmentAPI.Extensions
     {
         public static void MapProjectEndpoints(this WebApplication app)
         {
-            var projectDal = new ProjectDAL();
+            var projectDal = new DAL<Project>();
 
             app.MapGet("/project", () =>
             {
@@ -18,7 +18,7 @@ namespace DepartmentAPI.Extensions
 
             app.MapGet("/project/{id:int}", (int id) =>
             {
-                var project = projectDal.ReadById(id);
+                var project = projectDal.ReadBy(project => project.Id == id);
                 return project is not null ? Results.Ok(project) : Results.NotFound();
             });
 
@@ -33,7 +33,7 @@ namespace DepartmentAPI.Extensions
                 if (project.Id != id)
                     return Results.BadRequest("ID da URL não corresponde ao ID do objeto.");
 
-                var existing = projectDal.ReadById(id);
+                var existing = projectDal.ReadBy(project => project.Id == id);
                 if (existing is null)
                     return Results.NotFound();
 
@@ -43,7 +43,7 @@ namespace DepartmentAPI.Extensions
 
             app.MapDelete("/project/{id:int}", (int id) =>
             {
-                var project = projectDal.ReadById(id);
+                var project = projectDal.ReadBy(project => project.Id == id);
                 if (project is null)
                     return Results.NotFound();
 

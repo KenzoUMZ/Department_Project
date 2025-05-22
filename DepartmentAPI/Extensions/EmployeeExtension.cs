@@ -8,7 +8,7 @@ namespace DepartmentAPI.Extensions
     {
         public static void MapEmployeeEndpoints(this WebApplication app)
         {
-            var employeeDal = new EmployeeDAL();
+            var employeeDal = new DAL<Employee>();
 
             app.MapGet("/employee", () =>
             {
@@ -18,7 +18,7 @@ namespace DepartmentAPI.Extensions
 
             app.MapGet("/employee/{id:int}", (int id) =>
             {
-                var employee = employeeDal.ReadById(id);
+                var employee = employeeDal.ReadBy(employee => employee.EmployeeId == id);
                 return employee is not null ? Results.Ok(employee) : Results.NotFound();
             });
 
@@ -33,7 +33,7 @@ namespace DepartmentAPI.Extensions
                 if (employee.EmployeeId != id)
                     return Results.BadRequest("ID da URL não corresponde ao ID do objeto.");
 
-                var existing = employeeDal.ReadById(id);
+                var existing = employeeDal.ReadBy(employee => employee.EmployeeId == id);
                 if (existing is null)
                     return Results.NotFound();
 
@@ -43,7 +43,7 @@ namespace DepartmentAPI.Extensions
 
             app.MapDelete("/employee/{id:int}", (int id) =>
             {
-                var employee = employeeDal.ReadById(id);
+                var employee = employeeDal.ReadBy(employee => employee.EmployeeId == id);
                 if (employee is null)
                     return Results.NotFound();
 

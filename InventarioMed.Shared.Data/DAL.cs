@@ -9,22 +9,33 @@ namespace Department.Shared.Data
     public class DAL<T> where T : class
     {
         private readonly DepartmentContext context;
+
         public DAL()
         {
             context = new DepartmentContext();
         }
-
-        public void Create(T entity) => context.Set<T>().Add(entity);
-
-        public IEnumerable<T> Read() => context.Set<T>().ToList();
-
-
-        public void Update(T entity)
+        public void Create(T value)
         {
-            context.Set<T>().Update(entity);
+            context.Set<T>().Add(value);
             context.SaveChanges();
         }
-
-        public T? ReadBy(Func<T, bool> predicate) => context.Set<T>().FirstOrDefault(predicate);
+        public IEnumerable<T> Read()
+        {
+            return context.Set<T>().ToList();
+        }
+        public void Update(T value)
+        {
+            context.Set<T>().Update(value);
+            context.SaveChanges();
+        }
+        public void Delete(T value)
+        {
+            context.Set<T>().Remove(value);
+            context.SaveChanges();
+        }
+        public T? ReadBy(Func<T, bool> predicate)
+        {
+            return context.Set<T>().FirstOrDefault(predicate);
+        }
     }
 }
