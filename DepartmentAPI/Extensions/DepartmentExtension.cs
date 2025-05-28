@@ -1,5 +1,7 @@
 ﻿using Department.Shared.Data;
 using Department.Shared.Model;
+using DepartmentAPI.Requests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DepartmentAPI.Extensions
 {
@@ -7,45 +9,47 @@ namespace DepartmentAPI.Extensions
     {
         public static void MapDepartmentEndpoints(this WebApplication app)
         {
-            DAL<DepartmentEntity> departmentDal = new DAL<DepartmentEntity>();
-
-            app.MapGet("/department", () =>
+            app.MapGet("/departments", ([FromServices] DAL<DepartmentEntity> departmentDal) =>
             {
-                var departments = departmentDal.Read();
+                var departments = departmentDal.Read()
+                    .Select(d => new DepartmentRequest(d.Name, d.Location) { Name = d.Name, Location = d.Location });
                 return Results.Ok(departments);
             });
 
-            app.MapGet("/department/{id:int}", (int id) =>
+            app.MapGet("/department/{id:int}", ([FromServices] DAL<DepartmentEntity> departmentDal, int id) =>
             {
-                var department = departmentDal.ReadBy(department => department.Id == id);
-                return department is not null ? Results.Ok(department) : Results.NotFound();
+                var department = departmentDal.ReadBy(d => d.Id == id);
+                if (department is null)
+                    return Results.NotFound();
+
+                var dto = new DepartmentRequest(department.Name, department.Location) { Name = department.Name, Location = department.Location };
+                return Results.Ok(dto);
             });
 
-            app.MapPost("/department", (DepartmentEntity department) =>
+            app.MapPost("/department", ([FromServices] DAL<DepartmentEntity> departmentDal, DepartmentRequest departmentRequest) =>
             {
+                var department = new DepartmentEntity(departmentRequest.Name, departmentRequest.Location);
                 departmentDal.Create(department);
-                return Results.Created($"/department/{department.Id}", department);
+                var dto = new DepartmentRequest(department.Name, department.Location) { Name = department.Name, Location = department.Location };
+                return Results.Created($"/department/{department.Id}", dto);
             });
 
-            app.MapPut("/department/{id:int}", (int id, DepartmentEntity department) =>
+            app.MapPut("/department/{id:int}", ([FromServices] DAL<DepartmentEntity> departmentDal, int id, DepartmentRequest departmentRequest) =>
             {
-                if (department.Id != id)
-                    return Results.BadRequest("ID da URL não corresponde ao ID do objeto.");
-
-                //var existing = departmentDal.ReadById(id);
-                var existing = departmentDal.ReadBy(department => department.Id == id);
+                var existing = departmentDal.ReadBy(d => d.Id == id);
                 if (existing is null)
                     return Results.NotFound();
 
-                departmentDal.Update(department);
+                existing.Name = departmentRequest.Name;
+                existing.Location = departmentRequest.Location;
+                departmentDal.Update(existing);
+
                 return Results.NoContent();
             });
 
-            app.MapDelete("/department/{id:int}", (int id) =>
+            app.MapDelete("/department/{id:int}", ([FromServices] DAL<DepartmentEntity> departmentDal, int id) =>
             {
-
-                //var department = departmentDal.ReadById(id);
-                var department = departmentDal.ReadBy(department => department.Id == id);
+                var department = departmentDal.ReadBy(d => d.Id == id);
                 if (department is null)
                     return Results.NotFound();
 

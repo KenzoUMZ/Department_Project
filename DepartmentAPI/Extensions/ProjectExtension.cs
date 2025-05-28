@@ -1,6 +1,6 @@
 ﻿using Department.Shared.Data;
 using Department.Shared.Model;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DepartmentAPI.Extensions
 {
@@ -8,27 +8,25 @@ namespace DepartmentAPI.Extensions
     {
         public static void MapProjectEndpoints(this WebApplication app)
         {
-            var projectDal = new DAL<Project>();
-
-            app.MapGet("/project", () =>
+            app.MapGet("/project", ([FromServices] DAL<Project> projectDal) =>
             {
                 var projects = projectDal.Read();
                 return Results.Ok(projects);
             });
 
-            app.MapGet("/project/{id:int}", (int id) =>
+            app.MapGet("/project/{id:int}", ([FromServices] DAL<Project> projectDal, int id) =>
             {
                 var project = projectDal.ReadBy(project => project.Id == id);
                 return project is not null ? Results.Ok(project) : Results.NotFound();
             });
 
-            app.MapPost("/project", (Project project) =>
+            app.MapPost("/project", ([FromServices] DAL<Project> projectDal, Project project) =>
             {
                 projectDal.Create(project);
                 return Results.Created($"/project/{project.Id}", project);
             });
 
-            app.MapPut("/project/{id:int}", (int id, Project project) =>
+            app.MapPut("/project/{id:int}", ([FromServices] DAL<Project> projectDal, int id, Project project) =>
             {
                 if (project.Id != id)
                     return Results.BadRequest("ID da URL não corresponde ao ID do objeto.");
@@ -41,7 +39,7 @@ namespace DepartmentAPI.Extensions
                 return Results.NoContent();
             });
 
-            app.MapDelete("/project/{id:int}", (int id) =>
+            app.MapDelete("/project/{id:int}", ([FromServices] DAL<Project> projectDal, int id) =>
             {
                 var project = projectDal.ReadBy(project => project.Id == id);
                 if (project is null)

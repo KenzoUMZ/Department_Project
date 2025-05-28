@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Department.Shared.Data;
+using Department.Shared.Data.Models;
 using Department.Shared.Model;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Department.Shared.Data
 {
-    public class DepartmentContext : DbContext
+    public class DepartmentContext : IdentityDbContext<AccessUser, AccessRole, int>
     {
         public DbSet<DepartmentEntity> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -17,15 +19,18 @@ namespace Department.Shared.Data
 
         public DbSet<EmployeeProject> EmployeeProjects { get; set; }
 
-        private const string ConnectionString = "Server=tcp:departmentserver.database.windows.net,1433;Initial Catalog=Department_DB_V0;Persist Security Info=False;User ID=abacaxi_adm;Password=h@ytaee5Np3AF#5;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+        private const string ConnectionString = "Server=tcp:departmentserver.database.windows.net,1433;Initial Catalog=departmentdatabase;Persist Security Info=False;User ID=abacaxi_adm;Password=h@ytaee5Np3AF#5;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConnectionString).UseLazyLoadingProxies();
+            optionsBuilder
+                .UseSqlServer(ConnectionString)
+                .UseLazyLoadingProxies();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             // Definir chave composta
             modelBuilder.Entity<EmployeeProject>()
                 .HasKey(ep => new { ep.EmployeeId, ep.ProjectId });
