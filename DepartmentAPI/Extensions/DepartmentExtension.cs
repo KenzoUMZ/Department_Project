@@ -12,7 +12,7 @@ namespace DepartmentAPI.Extensions
             app.MapGet("/departments", ([FromServices] DAL<DepartmentEntity> departmentDal) =>
             {
                 var departments = departmentDal.Read()
-                    .Select(d => new DepartmentRequest(d.Name, d.Location) { Name = d.Name, Location = d.Location });
+                    .Select(d => new DepartmentRequest(d.Id, d.Name, d.Location) { Name = d.Name, Location = d.Location });
                 return Results.Ok(departments);
             });
 
@@ -22,7 +22,7 @@ namespace DepartmentAPI.Extensions
                 if (department is null)
                     return Results.NotFound();
 
-                var dto = new DepartmentRequest(department.Name, department.Location) { Name = department.Name, Location = department.Location };
+                var dto = new DepartmentRequest(department.Id, department.Name, department.Location) { Name = department.Name, Location = department.Location };
                 return Results.Ok(dto);
             });
 
@@ -30,7 +30,7 @@ namespace DepartmentAPI.Extensions
             {
                 var department = new DepartmentEntity(departmentRequest.Name, departmentRequest.Location);
                 departmentDal.Create(department);
-                var dto = new DepartmentRequest(department.Name, department.Location) { Name = department.Name, Location = department.Location };
+                var dto = new DepartmentRequest(department.Id, department.Name, department.Location) { Name = department.Name, Location = department.Location };
                 return Results.Created($"/department/{department.Id}", dto);
             });
 
@@ -55,6 +55,36 @@ namespace DepartmentAPI.Extensions
 
                 departmentDal.Delete(department);
                 return Results.NoContent();
+            });
+
+            app.MapGet("/department/{id:int}/full", ([FromServices] DAL<DepartmentEntity> departmentDal, int id) =>
+            {
+                var department = departmentDal.ReadBy(d => d.Id == id);
+
+                if (department is null)
+                    return Results.NotFound();
+
+                var dto = new
+                {
+                    Id = department.Id,
+                    Name = department.Name,
+                    Location = department.Location,
+                    Employees = department.Employees.Select(emp => new
+                    {
+                        emp.EmployeeId,
+                        emp.Name,
+                        emp.Position
+                    }),
+                    Infrastructure = new
+                    {
+                        department.Infrastructure.OfficeLocation,
+                        department.Infrastructure.NumberOfDesks,
+                        department.Infrastructure.NumberOfComputers,
+                        department.Infrastructure.HasMeetingRooms
+                    }
+                };
+
+                return Results.Ok(dto);
             });
         }
     }

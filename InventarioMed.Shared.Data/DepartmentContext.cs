@@ -8,6 +8,7 @@ using Department.Shared.Data.Models;
 using Department.Shared.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Department.Shared.Data
 {
@@ -19,7 +20,7 @@ namespace Department.Shared.Data
 
         public DbSet<EmployeeProject> EmployeeProjects { get; set; }
 
-        private const string ConnectionString = "Server=tcp:departmentserver.database.windows.net,1433;Initial Catalog=departmentdatabase;Persist Security Info=False;User ID=abacaxi_adm;Password=h@ytaee5Np3AF#5;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+        private const string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=DepartmentDB;Integrated Security=True;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -47,6 +48,10 @@ namespace Department.Shared.Data
                 .WithMany(p => p.EmployeeProjects) // Project tem ICollection<EmployeeProject>
                 .HasForeignKey(ep => ep.ProjectId);
 
+            modelBuilder.Entity<DepartmentEntity>()
+            .HasOne(d => d.Infrastructure)  // Um Departamento tem uma Infraestrutura
+            .WithOne(i => i.Department)     // Uma Infraestrutura pertence a um único Departamento
+            .HasForeignKey<Infrastructure>(i => i.DepartmentId); // Define a chave estrangeira
         }
 
     }

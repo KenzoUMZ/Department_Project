@@ -32,6 +32,7 @@ app.MapGet("/hello", () => "Hello World!");
 app.MapDepartmentEndpoints();
 app.MapEmployeeEndpoints();
 app.MapProjectEndpoints();
+app.MapInfrastructureEndpoints();
 
 // 🔹 Configuração de Autenticação e Autorização
 app.MapGroup("auth")
